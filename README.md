@@ -40,4 +40,4 @@ TODO
 
 # CHANGELOG
 
-Please see [CHANGELOG.md](https://github.com/sqrtrae/unfold/CHANGELOG.md).
+Please see [CHANGELOG.md](https://github.com/sqrtrae/unfold/blob/main/CHANGELOG.md).
