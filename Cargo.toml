@@ -1,0 +1,34 @@
+[package]
+name = "unfold"
+version = "0.1.0"
+authors = ["sqrtrae <sqrtrae@gmail.com>"]
+edition = "2021"
+rust-version = "1.74"
+description = """
+unfold is a small command line utility that
+replaces symbolic links with their targets.
+"""
+readme = "README.md"
+documentation = "https://github.com/sqrtrae/unfold"
+repository = "https://github.com/sqrtrae/unfold"
+license = "MIT OR Apache-2.0"
+keywords = ["symlink", "symbolic", "link"]
+categories = ["command-line-utilities", "filesystem"]
+
+[dependencies]
+anyhow = "1.0.95"
+symlink = "0.1.0"
+
+[dependencies.clap]
+version = "4.5.29"
+default-features = false
+features = ["std", "help", "usage", "error-context", "derive"]
+
+[[bin]]
+name = "unfold"
+path = "src/main.rs"
+
+[profile.release]
+strip = true
+codegen-units = 1
+lto = true
