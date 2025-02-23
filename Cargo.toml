@@ -12,6 +12,9 @@ readme = "README.md"
 documentation = "https://github.com/sqrtrae/unfold"
 repository = "https://github.com/sqrtrae/unfold"
 license = "MIT OR Apache-2.0"
+exclude = [
+    "/.github/"
+]
 keywords = ["symlink", "symbolic", "link"]
 categories = ["command-line-utilities", "filesystem"]
 
