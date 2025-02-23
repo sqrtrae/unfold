@@ -3,7 +3,7 @@
 use anyhow::{anyhow, bail, Context, Result};
 use clap::error::ErrorKind::DisplayHelp;
 use clap::Parser;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use symlink::{remove_symlink_auto, remove_symlink_dir, remove_symlink_file, symlink_auto};
 
 /// Unfold symbolic links to their targets.
@@ -76,12 +76,12 @@ fn validate_symlink(symlink: &PathBuf) -> Result<()> {
     Ok(())
 }
 
-fn try_find_target(symlink: &PathBuf, num_layers: u8, follow_to_source: bool) -> Result<PathBuf> {
+fn try_find_target(symlink: &Path, num_layers: u8, follow_to_source: bool) -> Result<PathBuf> {
     if follow_to_source {
         return Ok(symlink.canonicalize()?);
     }
 
-    let mut target = symlink.clone();
+    let mut target = symlink.to_path_buf();
     for _ in 0..num_layers {
         if target.is_symlink() {
             // have to join w/ parent dir because read_link gives a relative path.
