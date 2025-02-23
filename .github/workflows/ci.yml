@@ -1,0 +1,55 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+    - name: Set Toolchain
+      run: rustup update ${{ matrix.toolchain }} && rustup default ${{ matrix.toolchain }}
+    - name: Build
+      run: cargo build --locked --release
+    - name: Run Tests
+      run: cargo test --locked
+
+  rustfmt:
+    name: Check Format
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        components: rustfmt
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+    - name: Run `cargo fmt`
+      run: cargo fmt -- --check
+
+  clippy:
+    name: Check Lints
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        components: clippy
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+    - name: Run `cargo clippy`
+      run: cargo clippy --locked --all-targets
+  
