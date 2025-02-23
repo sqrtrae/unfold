@@ -2,7 +2,6 @@ use anyhow::Result;
 use assert_cmd::Command;
 use dircpy::copy_dir;
 use std::path::{Path, PathBuf};
-use tempfile;
 use tempfile::TempDir;
 
 const CONTENT_PATH: &str = "tests/test_resources/media";
