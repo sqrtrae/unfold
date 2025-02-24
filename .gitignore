@@ -4,5 +4,3 @@ target/
 # IDE project configs
 .idea/
 .vscode/
-
-tmp/
