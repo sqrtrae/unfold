@@ -1,5 +1,5 @@
 [package]
-name = "unfold"
+name = "unfold-symlinks"
 version = "0.1.0"
 authors = ["sqrtrae <sqrtrae@gmail.com>"]
 edition = "2021"
