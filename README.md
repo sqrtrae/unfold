@@ -14,7 +14,7 @@
 `unfold` is available via cargo:
 
 ```sh
-cargo install unfold
+cargo install unfold-symlinks
 ```
 
 # User Guide
