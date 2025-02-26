@@ -53,6 +53,13 @@ struct Args {
         conflicts_with("follow_to_source")
     )]
     num_layers: u8,
+
+    /// Set for verbose output.
+    ///
+    /// Error messages will still be printed to stderr
+    /// regardless of this option being set.
+    #[arg(short('v'), long("verbose"))]
+    verbose: bool,
 }
 
 fn try_absolute_path(path: &PathBuf) -> Result<PathBuf> {
@@ -127,7 +134,12 @@ fn try_dir_unfold(symlink_dir: &PathBuf, target_dir: &PathBuf) -> Result<()> {
     Ok(())
 }
 
-fn try_unfold(symlink: &PathBuf, num_layers: u8, follow_to_source: bool) -> Result<()> {
+fn try_unfold(
+    symlink: &PathBuf,
+    num_layers: u8,
+    follow_to_source: bool,
+    verbose: bool,
+) -> Result<()> {
     let target = &try_find_target(symlink, num_layers, follow_to_source)?;
 
     if target.is_symlink() {
@@ -140,10 +152,12 @@ fn try_unfold(symlink: &PathBuf, num_layers: u8, follow_to_source: bool) -> Resu
         bail!("Could not unfold {:#?}.", symlink);
     }
 
-    println!(
-        "Successfully unfolded {:#?} targeting {:#?}",
-        symlink, target,
-    );
+    if verbose {
+        println!(
+            "Successfully unfolded {:#?} targeting {:#?}",
+            symlink, target,
+        );
+    }
     Ok(())
 }
 
@@ -180,7 +194,9 @@ fn main() -> Result<()> {
     })?;
 
     if args.num_layers == 0 {
-        println!("Did nothing. :/");
+        if args.verbose {
+            println!("Did nothing. :/");
+        }
         return Ok(());
     }
 
@@ -188,14 +204,18 @@ fn main() -> Result<()> {
         let symlink = &try_absolute_path(&symlink)?;
         validate_symlink(symlink)?;
         let target = &try_find_target(symlink, 1, false)?;
-        try_unfold(symlink, args.num_layers, args.follow_to_source).or_else(
-            |err| match try_revert(symlink, target) {
-                Ok(()) => Err(err),
-                Err(revert_err) => {
-                    Err(err).context(format!("Could not revert {:#?}: {}", symlink, revert_err))
-                }
-            },
-        )?;
+        try_unfold(
+            symlink,
+            args.num_layers,
+            args.follow_to_source,
+            args.verbose,
+        )
+        .or_else(|err| match try_revert(symlink, target) {
+            Ok(()) => Err(err),
+            Err(revert_err) => {
+                Err(err).context(format!("Could not revert {:#?}: {}", symlink, revert_err))
+            }
+        })?;
     }
 
     Ok(())
