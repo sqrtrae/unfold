@@ -120,7 +120,8 @@ fn symlink_to_file() -> Result<()> {
     cmd.current_dir(test_env.root())
         .arg(symlink)
         .assert()
-        .success();
+        .success()
+        .stdout(predicates::str::is_empty());
 
     assert!(test_env.is_file(symlink) & !test_env.is_symlink(symlink));
     assert_eq!(
@@ -537,5 +538,27 @@ fn path_is_a_broken_symlink() -> Result<()> {
         .arg(symlink)
         .assert()
         .failure();
+    Ok(())
+}
+
+#[test]
+fn verbose_output() -> Result<()> {
+    let test_env = TestEnvironment::new();
+    let symlink = "symlink_file";
+    test_env.create_symlink_file(symlink, PERCY_JACKSON_BOOK)?;
+
+    let mut cmd = Command::cargo_bin("unfold")?;
+    cmd.current_dir(test_env.root())
+        .arg("-v")
+        .arg(symlink)
+        .assert()
+        .success()
+        .stdout(predicates::str::contains(PERCY_JACKSON_BOOK));
+
+    assert!(test_env.is_file(symlink) & !test_env.is_symlink(symlink));
+    assert_eq!(
+        test_env.read_to_string(symlink)?,
+        test_env.read_to_string(PERCY_JACKSON_BOOK)?,
+    );
     Ok(())
 }
