@@ -32,6 +32,7 @@ Arguments:
 Options:
   -f, --follow-to-source  Follow symbolic links to their source
   -n, --num-layers <NUM>  Follow up to NUM symbolic links
+  -v, --verbose           Set for verbose output
   -h, --help              Print help (see more with '--help')
   -V, --version           Print version
 ```
